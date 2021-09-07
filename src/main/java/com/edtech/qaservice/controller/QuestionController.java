@@ -2,6 +2,9 @@ package com.edtech.qaservice.controller;
 
 import com.edtech.qaservice.model.QuestionItem;
 import com.edtech.qaservice.service.QuestionService;
+
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +22,21 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
-    @GetMapping("id/{questionId}")
-    public QuestionItem getQuestionById(@PathVariable(value = "questionId") int questionId) {
-        return questionService.getQuestionById(questionId);
+    @PostMapping("author/{author}")
+    public String createQuestionIntoDynamoDB(@PathVariable(value = "author") String author, @RequestBody QuestionItem questionItem) {
+        try {
+            questionItem.setAuthor(author);
+            questionService.postQuestionByQuestionItem(questionItem);
+            return "Successfully inserted question into QAService table";
+        } catch (Exception e) {
+            return "Failed to inserted into DynamoDB table due to " + e.getMessage();
+        }
+
+    }
+
+    @GetMapping("id/{id}")
+    public QuestionItem getQuestionByAuthorAndDate(@PathVariable(value = "id") String id)
+    {
+        return questionService.getQuestionById(id);
     }
 }

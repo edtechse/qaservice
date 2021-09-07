@@ -8,13 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class QuestionRepository {
+public class QARepository {
 
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
-    public QuestionItem findQuestionById(int questionId) {
-        return dynamoDBMapper.load(QuestionItem.class, 1, "Garfield");
+    public QuestionItem findQuestionById(String id) {
+        return dynamoDBMapper.load(QuestionItem.class, id);
+    }
+
+    public void createQuestionByQuestionItem(QuestionItem questionItem) {
+        dynamoDBMapper.save(questionItem);
     }
 
 }
