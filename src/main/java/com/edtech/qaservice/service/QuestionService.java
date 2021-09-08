@@ -23,6 +23,11 @@ public class QuestionService {
         return question;
     }
 
+    public void deleteQuestionById(String id) {
+        QuestionItem question = questionRepository.findQuestionById(id);
+        questionRepository.deleteQuestionByQuestionItem(question);
+    }
+
     public void postQuestionByQuestionItem(QuestionItem questionItem) {
         questionRepository.saveQuestionByQuestionItem(questionItem);
     }
@@ -43,5 +48,12 @@ public class QuestionService {
             idList.add(item.getId());
         }
         return idList;
+    }
+
+    public void deleteQuestionByAuthor(String author) {
+        List<QuestionItem> items = questionRepository.findQuestionByAuthor(author);
+        for(QuestionItem item: items) {
+            questionRepository.deleteQuestionByQuestionItem(item);
+        }
     }
 }

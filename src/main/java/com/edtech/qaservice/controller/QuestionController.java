@@ -23,7 +23,7 @@ public class QuestionController {
             questionService.postQuestionByQuestionItem(questionItem);
             return "Successfully inserted question into QAService table";
         } catch (Exception e) {
-            return "Failed to inserted into DynamoDB table due to " + e.getMessage();
+            return "Failed to inserted into QAService table due to " + e.getMessage();
         }
 
     }
@@ -35,7 +35,7 @@ public class QuestionController {
             questionService.updateQuestionItem(questionItem);
             return "Successfully modify question in QAService table";
         } catch (Exception e) {
-            return "Failed to modify DynamoDB table due to " + e.getMessage();
+            return "Failed to modify QAService table due to " + e.getMessage();
         }
     }
 
@@ -45,9 +45,30 @@ public class QuestionController {
         return questionService.findQuestionIdByAuthor(author);
     }
 
+    @DeleteMapping("author/{author}")
+    public String deleteQuestionByAuthor(@PathVariable(value = "author") String author) {
+        try {
+            questionService.deleteQuestionByAuthor(author);
+            return "Successfully delete all question by author in QAService table";
+        } catch (Exception e) {
+            return "Failed to delete all question by author in QAService table due to " + e.getMessage();
+        }
+    }
+
     @GetMapping("id/{id}")
     public QuestionItem getQuestionById(@PathVariable(value = "id") String id)
     {
         return questionService.getQuestionById(id);
+    }
+
+    @DeleteMapping("id/{id}")
+    public String deleteQuestionById(@PathVariable(value = "id") String id) {
+        try {
+            questionService.deleteQuestionById(id);
+            return "Successfully delete specific question in QAService table";
+        } catch (Exception e) {
+            return "Failed to delete question in QAService table due to " + e.getMessage();
+        }
+
     }
 }

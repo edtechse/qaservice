@@ -22,6 +22,10 @@ public class QARepository {
         return dynamoDBMapper.load(QuestionItem.class, id);
     }
 
+    public void deleteQuestionByQuestionItem(QuestionItem questionItem) {
+        dynamoDBMapper.delete(questionItem);
+    }
+
     public void saveQuestionByQuestionItem(QuestionItem questionItem) {
         dynamoDBMapper.save(questionItem);
     }
