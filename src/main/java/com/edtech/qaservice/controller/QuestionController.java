@@ -3,17 +3,11 @@ package com.edtech.qaservice.controller;
 import com.edtech.qaservice.model.QuestionItem;
 import com.edtech.qaservice.service.QuestionService;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/edtech/question")
@@ -34,8 +28,25 @@ public class QuestionController {
 
     }
 
+    @PutMapping("author/{author}")
+    public String updateQuestionIntoDynamoDB(@PathVariable(value = "author") String author, @RequestBody QuestionItem questionItem) {
+        try {
+            questionItem.setAuthor(author);
+            questionService.updateQuestionItem(questionItem);
+            return "Successfully modify question in QAService table";
+        } catch (Exception e) {
+            return "Failed to modify DynamoDB table due to " + e.getMessage();
+        }
+    }
+
+    @GetMapping("author/{author}")
+    public List<String> getQuestionIdByAuthor(@PathVariable(value = "author") String author)
+    {
+        return questionService.findQuestionIdByAuthor(author);
+    }
+
     @GetMapping("id/{id}")
-    public QuestionItem getQuestionByAuthorAndDate(@PathVariable(value = "id") String id)
+    public QuestionItem getQuestionById(@PathVariable(value = "id") String id)
     {
         return questionService.getQuestionById(id);
     }

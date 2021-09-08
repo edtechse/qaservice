@@ -24,6 +24,24 @@ public class QuestionService {
     }
 
     public void postQuestionByQuestionItem(QuestionItem questionItem) {
-        questionRepository.createQuestionByQuestionItem(questionItem);
+        questionRepository.saveQuestionByQuestionItem(questionItem);
+    }
+
+    public void updateQuestionItem(QuestionItem questionItem) {
+        QuestionItem originQuestion = questionRepository.findQuestionById(questionItem.getId());
+        if(questionItem.getQuestionText() != null)
+            originQuestion.setQuestionText(questionItem.getQuestionText());
+        if(questionItem.getQuestionTag() != null)
+            originQuestion.setQuestionTag(questionItem.getQuestionTag());
+        questionRepository.saveQuestionByQuestionItem(originQuestion);
+    }
+
+    public List<String> findQuestionIdByAuthor(String author) {
+        List<QuestionItem> items = questionRepository.findQuestionByAuthor(author);
+        List<String> idList = new ArrayList<>();
+        for(QuestionItem item: items) {
+            idList.add(item.getId());
+        }
+        return idList;
     }
 }
