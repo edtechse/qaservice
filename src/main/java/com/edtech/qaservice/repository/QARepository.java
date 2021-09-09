@@ -1,9 +1,9 @@
 package com.edtech.qaservice.repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.edtech.qaservice.model.AnswerItem;
 import com.edtech.qaservice.model.QuestionItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,6 +18,7 @@ public class QARepository {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    // CRUD operation for question
     public QuestionItem findQuestionById(String id) {
         return dynamoDBMapper.load(QuestionItem.class, id);
     }
@@ -42,4 +43,28 @@ public class QARepository {
         return scanResult;
     }
 
+    // CRUD operation for answer
+    public AnswerItem findAnswerById(String id) {
+        return dynamoDBMapper.load(AnswerItem.class, id);
+    }
+
+    public void deleteAnswerByAnswerItem(AnswerItem answerItem) {
+        dynamoDBMapper.delete(answerItem);
+    }
+
+    public void saveAnswerByAnswerItem(AnswerItem answerItem) {
+        dynamoDBMapper.save(answerItem);
+    }
+
+    public List<AnswerItem> findAnswerByAuthor(String author) {
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":val", new AttributeValue().withS(author));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("author = :val").withExpressionAttributeValues(eav);
+
+        List<AnswerItem> scanResult = dynamoDBMapper.scan(AnswerItem.class, scanExpression);
+
+        return scanResult;
+    }
 }

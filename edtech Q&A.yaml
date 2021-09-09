@@ -1,0 +1,504 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Edtech Service server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Edtech Platform"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "dynamodb.ap-southeast-1.amazonaws.com"
+basePath: "/"
+tags:
+- name: "Edtech Service Question"
+  description: "Edtech Service for questions"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "Edtech Service Answer"
+  description: "Edtech Service for Answers"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /edtech/question/author/{author}:
+    post:
+      tags:
+      - "Edtech Service Question"
+      summary: "Create a question in edtech platform"
+      description: ""
+      operationId: "addQuestion"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique author for each user to create or modify an question"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Question object that needs to be added to the service system"
+        required: true
+        schema:
+          $ref: "#/definitions/QuestionDetail"
+      responses:
+        "204":
+          description: "Question successful created"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+        "405":
+          description: "Validation exception"
+      security:
+      - edtech_auth:
+        - "write:questions"
+        - "read:questions"
+    put:
+      tags:
+      - "Edtech Service Question"
+      summary: "Update an existing question"
+      description: ""
+      operationId: "updateQuestion"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique author for each user to create or modify an question"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Question object that needs to be added to the service system"
+        required: true
+        schema:
+          $ref: "#/definitions/QuestionUpdateDetail"
+      responses:
+        "204":
+          description: "Question successful modified"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+        "405":
+          description: "Validation exception"
+      security:
+      - edtech_auth:
+        - "write:questions"
+        - "read:questions"
+        
+    get:
+      tags:
+      - "Edtech Service Question"
+      summary: "Find question by user account"
+      description: ""
+      operationId: "findQuestionsByUseraccount"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique author for each user to create or modify an question"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "get questions successfully"
+          schema:
+            $ref: "#/definitions/QuestionIdSaved"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+      security:
+      - edtech_auth:
+        - "read:questions"
+        
+    delete:
+      tags:
+      - "Edtech Service Question"
+      summary: "Delete all questions by user account"
+      description: ""
+      operationId: "deletequestionsByuseraccount"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique all questions under an author"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "delete all questions for specific user successfully"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+      security:
+      - edtech_auth:
+        - "write:questions"
+
+  /edtech/question/id/{questionId}:
+    get:
+      tags:
+      - "Edtech Service Question"
+      summary: "Finds question by question id"
+      description: ""
+      operationId: "findQuestionByquestionid"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "questionId"
+        description: "unique question id to an question"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "get question by question id successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/QuestionDetailSaved"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+      security:
+      - edtech_auth:
+        - "read:questions"
+    
+    delete:
+      tags:
+      - "Edtech Service Question"
+      summary: "Delete question by question id"
+      description: ""
+      operationId: "deleteQuestionByQuestionid"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "questionId"
+        description: "unique question id to delete an question"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "delete specific question successfully"
+        "400":
+          description: "Invalid question id supplied"
+        "404":
+          description: "Question id not found"
+      security:
+      - edtech_auth:
+        - "write:questions"
+  
+  /edtech/answer/author/{author}:
+    post:
+      tags:
+      - "Edtech Service Answer"
+      summary: "Create a answer in edtech platform"
+      description: ""
+      operationId: "addanswer"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique author for each user to create or modify an answer"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Answer object that needs to be added to the service system"
+        required: true
+        schema:
+          $ref: "#/definitions/AnswerDetail"
+      responses:
+        "204":
+          description: "Answer successful created"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+        "405":
+          description: "Validation exception"
+      security:
+      - edtech_auth:
+        - "write:answers"
+        - "read:answers"
+        
+    get:
+      tags:
+      - "Edtech Service Answer"
+      summary: "Finds answers by user account"
+      description: ""
+      operationId: "findanswerssByuseraccount"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique author for each user to create or modify an question"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "get questions successfully"
+          schema:
+            $ref: "#/definitions/AnswerIdSaved"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+      security:
+      - edtech_auth:
+        - "read:questions"
+        
+    delete:
+      tags:
+      - "Edtech Service Answer"
+      summary: "Delete all answers by user account"
+      description: ""
+      operationId: "deleteAnswerssByUserAccount"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "author"
+        description: "unique author for each user to create or modify an answer"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "delete all answers for specific user successfully"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+      security:
+      - edtech_auth:
+        - "write:answers"
+
+  /edtech/answer/id/{answerId}:
+    get:
+      tags:
+      - "Edtech Service Answer"
+      summary: "Find answer by answer id"
+      description: ""
+      operationId: "findAnswerByanswerid"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "answerId"
+        description: "unique answer id to an answer"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "get questions successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AnswerDetailSaved"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "User not found"
+      security:
+      - edtech_auth:
+        - "read:answers"
+    
+    delete:
+      tags:
+      - "Edtech Service Answer"
+      summary: "Delete answer by answer id"
+      description: ""
+      operationId: "deleteAnswerByAnswerid"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "answerId"
+        description: "unique answer id to delete an answer"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "delete specific answer successfully"
+        "400":
+          description: "Invalid answer id supplied"
+        "404":
+          description: "Question id not found"
+      security:
+      - edtech_auth:
+        - "write:answers"       
+securityDefinitions:
+  edtech_auth:
+    type: "oauth2"
+    authorizationUrl: "http://edtech.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:questions: "modify questions in your account"
+      read:questions: "query your questions"
+      write:answers: "modify answers in your account"
+      read:answers: "query your answers"
+definitions:
+  QuestionDetail:
+    type: "object"
+    required:
+    - "questionTitle"
+    - "createDate"
+    - "questionText"
+    - "questionTag"
+    properties:
+      questionTitle:
+        type: "string"
+        example: "React question"
+      createDate:
+        type: "string"
+        format: "date-time"
+      questionText:
+        type: "string"
+        example: "Failed to establish a connection in pgAdmin"
+      questionTag:
+        type: "array"
+        items:
+          type: "string"
+          example: "pgAdmin"
+    xml:
+      name: "QuestionDetail"
+  QuestionIdSaved:
+    type: "array"
+    items:
+      type: "string"
+      example: "AXSC10321SXAScma"
+  QuestionDetailSaved:
+    type: "object"
+    required:
+    - "questionTitle"
+    - "questionId"
+    - "createDate"
+    - "questionText"
+    - "questionTag"
+    - "auther"
+    properties:
+      questionTitle:
+        type: "string"
+        example: "React question"
+      questionId:
+        type: "string"
+        example: "AXSC10321SXAScma"
+      createDate:
+        type: "string"
+        format: "date-time"
+      questionText:
+        type: "string"
+        example: "Failed to establish a connection in pgAdmin"
+      questionTag:
+        type: "array"
+        items:
+          type: "string"
+          example: "pgAdmin"
+      auther:
+        type: "string"
+        description: "author account"
+        example: "Peter Pucker"
+    xml:
+      name: "QuestionDetail"
+  QuestionUpdateDetail:
+    type: "object"
+    required:
+    - "updateDate"
+    properties:
+      questionId:
+        type: "string"
+        example: "AXSC10321SXAScma"
+      questionText:
+        type: "string"
+        example: "Failed to establish a connection in pgAdmin"
+      questionTag:
+        type: "array"
+        items:
+          type: "string"
+          example: "pgAdmin"
+    xml:
+      name: "QuestionUpdateDetail"
+  AnswerDetail:
+    type: "object"
+    required:
+    - "answerTitle"
+    - "createDate"
+    - "answerText"
+    properties:
+      answerTitle:
+        type: "string"
+        example: "React answer"
+      createDate:
+        type: "string"
+        format: "date-time"
+      answerText:
+        type: "string"
+        example: "Failed to establish a connection in pgAdmin"
+    xml:
+      name: "AnswerDetail"
+  AnswerIdSaved:
+    type: "array"
+    items:
+      type: "string"
+      example: "AXSC10321SXAScma"
+  AnswerDetailSaved:
+    type: "object"
+    required:
+    - "answerTitle"
+    - "createDate"
+    - "answerText"
+    - "autherAccountId"
+    properties:
+      answerTitle:
+        type: "string"
+        example: "React answer"
+      createDate:
+        type: "string"
+        format: "date-time"
+      answerText:
+        type: "string"
+        example: "Establish a connection in pgAdmin"
+      autherAccountId:
+        type: "string"
+        description: "author account"
+        example: "Peter Pucker"
+    xml:
+      name: "QuestionDetail"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

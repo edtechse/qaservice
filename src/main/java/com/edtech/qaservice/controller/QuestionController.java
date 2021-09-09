@@ -1,10 +1,9 @@
 package com.edtech.qaservice.controller;
 
 import com.edtech.qaservice.model.QuestionItem;
-import com.edtech.qaservice.service.QuestionService;
+import com.edtech.qaservice.service.QAService;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionController {
 
     @Autowired
-    private QuestionService questionService;
+    private QAService qaService;
 
     @PostMapping("author/{author}")
     public String createQuestionIntoDynamoDB(@PathVariable(value = "author") String author, @RequestBody QuestionItem questionItem) {
         try {
             questionItem.setAuthor(author);
-            questionService.postQuestionByQuestionItem(questionItem);
+            qaService.postQuestionByQuestionItem(questionItem);
             return "Successfully inserted question into QAService table";
         } catch (Exception e) {
             return "Failed to inserted into QAService table due to " + e.getMessage();
@@ -32,7 +31,7 @@ public class QuestionController {
     public String updateQuestionIntoDynamoDB(@PathVariable(value = "author") String author, @RequestBody QuestionItem questionItem) {
         try {
             questionItem.setAuthor(author);
-            questionService.updateQuestionItem(questionItem);
+            qaService.updateQuestionItem(questionItem);
             return "Successfully modify question in QAService table";
         } catch (Exception e) {
             return "Failed to modify QAService table due to " + e.getMessage();
@@ -42,13 +41,13 @@ public class QuestionController {
     @GetMapping("author/{author}")
     public List<String> getQuestionIdByAuthor(@PathVariable(value = "author") String author)
     {
-        return questionService.findQuestionIdByAuthor(author);
+        return qaService.findQuestionIdByAuthor(author);
     }
 
     @DeleteMapping("author/{author}")
     public String deleteQuestionByAuthor(@PathVariable(value = "author") String author) {
         try {
-            questionService.deleteQuestionByAuthor(author);
+            qaService.deleteQuestionByAuthor(author);
             return "Successfully delete all question by author in QAService table";
         } catch (Exception e) {
             return "Failed to delete all question by author in QAService table due to " + e.getMessage();
@@ -58,17 +57,16 @@ public class QuestionController {
     @GetMapping("id/{id}")
     public QuestionItem getQuestionById(@PathVariable(value = "id") String id)
     {
-        return questionService.getQuestionById(id);
+        return qaService.getQuestionById(id);
     }
 
     @DeleteMapping("id/{id}")
     public String deleteQuestionById(@PathVariable(value = "id") String id) {
         try {
-            questionService.deleteQuestionById(id);
+            qaService.deleteQuestionById(id);
             return "Successfully delete specific question in QAService table";
         } catch (Exception e) {
             return "Failed to delete question in QAService table due to " + e.getMessage();
         }
-
     }
 }

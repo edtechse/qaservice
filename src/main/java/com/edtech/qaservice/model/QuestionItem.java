@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import java.util.Set;
 
-@DynamoDBTable(tableName="QAService2")
+@DynamoDBTable(tableName="QuestionService")
 public class QuestionItem {
     private String id;
     private String author;
