@@ -89,4 +89,20 @@ public class QAService {
             qaRepository.deleteAnswerByAnswerItem(item);
         }
     }
+
+    public List<String> findAnswerIdByQuestionId(String questionId) {
+        List<AnswerItem> items = qaRepository.findAnswerByQuestionId(questionId);
+        List<String> idList = new ArrayList<>();
+        for(AnswerItem item: items) {
+            idList.add(item.getId());
+        }
+        return idList;
+    }
+
+    public void deleteAnswerByQuestionId(String questionId) {
+        List<AnswerItem> items = qaRepository.findAnswerByQuestionId(questionId);
+        for(AnswerItem item: items) {
+            qaRepository.deleteAnswerByAnswerItem(item);
+        }
+    }
 }

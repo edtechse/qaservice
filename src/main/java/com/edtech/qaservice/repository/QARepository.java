@@ -67,4 +67,16 @@ public class QARepository {
 
         return scanResult;
     }
+
+    public List<AnswerItem> findAnswerByQuestionId(String questionId) {
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":val", new AttributeValue().withS(questionId));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("questionId = :val").withExpressionAttributeValues(eav);
+
+        List<AnswerItem> scanResult = dynamoDBMapper.scan(AnswerItem.class, scanExpression);
+
+        return scanResult;
+    }
 }

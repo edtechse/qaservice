@@ -43,6 +43,22 @@ public class AnswerController {
         }
     }
 
+    @GetMapping("questionid/{questionId}")
+    public List<String> getAnswerIdByQuestionId(@PathVariable(value = "questionId") String questionId)
+    {
+        return qaService.findAnswerIdByQuestionId(questionId);
+    }
+
+    @DeleteMapping("questionid/{questionId}")
+    public String deleteAnswerByQuestionId(@PathVariable(value = "questionId") String questionId) {
+        try {
+            qaService.deleteAnswerByQuestionId(questionId);
+            return "Successfully delete all answer by questionId in QAService table";
+        } catch (Exception e) {
+            return "Failed to delete all answer by questionId in QAService table due to " + e.getMessage();
+        }
+    }
+
     @GetMapping("id/{id}")
     public AnswerItem getAnswerById(@PathVariable(value = "id") String id)
     {
