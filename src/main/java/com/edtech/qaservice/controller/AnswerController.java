@@ -4,6 +4,7 @@ import com.edtech.qaservice.model.AnswerItem;
 import com.edtech.qaservice.service.QAService;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +16,12 @@ public class AnswerController {
     @Autowired
     private QAService qaService;
 
-    @PostMapping("author/{author}")
-    public String createAnswerIntoDynamoDB(@PathVariable(value = "author") String author, @RequestBody AnswerItem answerItem) {
+    @PostMapping("questionid/{questionId}")
+    public String createAnswerIntoDynamoDB(@PathVariable(value = "questionId") String questionId, @RequestBody AnswerItem answerItem) {
         try {
-            answerItem.setAuthor(author);
-            qaService.postAnswerByAnswerItem(answerItem);
+            String answerId = UUID.randomUUID().toString().replaceAll("-","");
+            answerItem.setAnswerId(answerId);
+            qaService.postAnswerByAnswerItem(questionId, answerItem);
             return "Successfully inserted answer into QAService table";
         } catch (Exception e) {
             return "Failed to inserted into QAService table due to " + e.getMessage();
@@ -27,51 +29,23 @@ public class AnswerController {
 
     }
 
-    @GetMapping("author/{author}")
-    public List<String> getAnswerIdByAuthor(@PathVariable(value = "author") String author)
-    {
-        return qaService.findAnswerIdByAuthor(author);
+    @GetMapping("questionid/{questionId}/answerid/{answerId}")
+    public AnswerItem getAnswerById(@PathVariable(value = "questionId") String questionId, @PathVariable(value = "answerId") String answerId) {
+        return qaService.getAnswerById(questionId, answerId);
     }
 
-    @DeleteMapping("author/{author}")
-    public String deleteAnswerByAuthor(@PathVariable(value = "author") String author) {
+    @DeleteMapping("questionid/{questionId}/answerid/{answerId}")
+    public String deleteAnswerById(@PathVariable(value = "questionId") String questionId, @PathVariable(value = "answerId") String answerId) {
         try {
-            qaService.deleteAnswerByAuthor(author);
-            return "Successfully delete all answer by author in QAService table";
-        } catch (Exception e) {
-            return "Failed to delete all answer by author in QAService table due to " + e.getMessage();
-        }
-    }
-
-    @GetMapping("questionid/{questionId}")
-    public List<String> getAnswerIdByQuestionId(@PathVariable(value = "questionId") String questionId)
-    {
-        return qaService.findAnswerIdByQuestionId(questionId);
-    }
-
-    @DeleteMapping("questionid/{questionId}")
-    public String deleteAnswerByQuestionId(@PathVariable(value = "questionId") String questionId) {
-        try {
-            qaService.deleteAnswerByQuestionId(questionId);
-            return "Successfully delete all answer by questionId in QAService table";
-        } catch (Exception e) {
-            return "Failed to delete all answer by questionId in QAService table due to " + e.getMessage();
-        }
-    }
-
-    @GetMapping("id/{id}")
-    public AnswerItem getAnswerById(@PathVariable(value = "id") String id)
-    {
-        return qaService.getAnswerById(id);
-    }
-
-    @DeleteMapping("id/{id}")
-    public String deleteAnswerById(@PathVariable(value = "id") String id) {
-        try {
-            qaService.deleteAnswerById(id);
+            qaService.deleteAnswerById(questionId,answerId );
             return "Successfully delete specific answer in QAService table";
         } catch (Exception e) {
             return "Failed to delete answer in QAService table due to " + e.getMessage();
         }
+    }
+
+    @GetMapping("author/{author}")
+    public List<AnswerItem> getAnswerByAuthor(@PathVariable(value = "author") String author) {
+        return qaService.getAnswerByAuthor(author);
     }
 }
