@@ -26,6 +26,29 @@ schemes:
   - "https"
   - "http"
 paths:
+  /edtech/question/all:
+    get:
+      tags:
+        - "Edtech Service Question"
+      summary: "Find all questions"
+      description: ""
+      operationId: "findAllQuestions"
+      produces:
+        - "application/xml"
+        - "application/json"
+      responses:
+        "200":
+          description: "get questions successfully"
+          schema:
+            $ref: "#/definitions/QuestionDetailSaved"
+        "400":
+          description: "Invalid user account supplied"
+        "404":
+          description: "Table not found"
+      security:
+        - edtech_auth:
+            - "read:questions"
+
   /edtech/question/author/{author}:
     post:
       tags:
@@ -214,44 +237,6 @@ paths:
             - "write:questions"
 
   /edtech/answer/author/{author}:
-    post:
-      tags:
-        - "Edtech Service Answer"
-      summary: "Create a answer in edtech platform"
-      description: ""
-      operationId: "addAnswer"
-      consumes:
-        - "application/json"
-        - "application/xml"
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - in: "path"
-          name: "author"
-          description: "author for each user to create or modify an answer"
-          required: true
-          type: "string"
-        - in: "body"
-          name: "body"
-          description: "Answer object that needs to be added to the service system"
-          required: true
-          schema:
-            $ref: "#/definitions/AnswerDetail"
-      responses:
-        "204":
-          description: "Answer successful created"
-        "400":
-          description: "Invalid author supplied"
-        "404":
-          description: "User not found"
-        "405":
-          description: "Validation exception"
-      security:
-        - edtech_auth:
-            - "write:answers"
-            - "read:answers"
-
     get:
       tags:
         - "Edtech Service Answer"
@@ -307,6 +292,44 @@ paths:
             - "write:answers"
 
   /edtech/answer/questionid/{questionId}:
+    post:
+      tags:
+        - "Edtech Service Answer"
+      summary: "Create a answer in edtech platform"
+      description: ""
+      operationId: "addAnswer"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "questionId"
+          description: "questionId to create or modify an answer"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Answer object that needs to be added to the service system"
+          required: true
+          schema:
+            $ref: "#/definitions/AnswerDetail"
+      responses:
+        "204":
+          description: "Answer successful created"
+        "400":
+          description: "Invalid author supplied"
+        "404":
+          description: "User not found"
+        "405":
+          description: "Validation exception"
+      security:
+        - edtech_auth:
+            - "write:answers"
+            - "read:answers"
+
     get:
       tags:
         - "Edtech Service Answer"
@@ -335,34 +358,7 @@ paths:
         - edtech_auth:
             - "read:answers"
 
-    delete:
-      tags:
-        - "Edtech Service Answer"
-      summary: "Delete all answers by questionId"
-      description: ""
-      operationId: "deleteAnswerssByQuestionId"
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - in: "path"
-          name: "questionId"
-          description: "questionId for each user to delete all related answers"
-          required: true
-          type: "string"
-      responses:
-        "200":
-          description: "delete all answers for specific questionId successfully"
-        "400":
-          description: "Invalid questionId supplied"
-        "404":
-          description: "QuestionId not found"
-      security:
-        - edtech_auth:
-            - "write:answers"
-
-
-  /edtech/answer/id/{answerId}:
+  /edtech/answer/questionid/{questionId}/id/{answerId}:
     get:
       tags:
         - "Edtech Service Answer"
@@ -373,6 +369,11 @@ paths:
         - "application/xml"
         - "application/json"
       parameters:
+        - in: "path"
+          name: "questionId"
+          description: "questionId for each user to delete all related answers"
+          required: true
+          type: "string"
         - in: "path"
           name: "answerId"
           description: "unique answer id to an answer"
@@ -404,6 +405,11 @@ paths:
         - "application/json"
       parameters:
         - in: "path"
+          name: "questionId"
+          description: "questionId for each user to delete all related answers"
+          required: true
+          type: "string"
+        - in: "path"
           name: "answerId"
           description: "unique answer id to delete an answer"
           required: true
@@ -433,14 +439,14 @@ definitions:
     type: "object"
     required:
       - "questionTitle"
-      - "createDate"
+      - "questionTimestamp"
       - "questionText"
       - "questionTag"
     properties:
       questionTitle:
         type: "string"
         example: "React question"
-      createDate:
+      questionTimestamp:
         type: "string"
         format: "date-time"
       questionText:
@@ -451,6 +457,10 @@ definitions:
         items:
           type: "string"
           example: "pgAdmin"
+      answer:
+        type: "array"
+        items:
+          $ref: "#/definitions/AnswerDetailSaved"
     xml:
       name: "QuestionDetail"
   QuestionIdSaved:
@@ -463,10 +473,11 @@ definitions:
     required:
       - "questionTitle"
       - "questionId"
-      - "createDate"
+      - "questionTimestamp"
       - "questionText"
       - "questionTag"
-      - "auther"
+      - "author"
+      - "answer"
     properties:
       questionTitle:
         type: "string"
@@ -474,7 +485,7 @@ definitions:
       questionId:
         type: "string"
         example: "AXSC10321SXAScma"
-      createDate:
+      questionTimestamp:
         type: "string"
         format: "date-time"
       questionText:
@@ -485,10 +496,14 @@ definitions:
         items:
           type: "string"
           example: "pgAdmin"
-      auther:
+      author:
         type: "string"
         description: "author account"
         example: "Peter Pucker"
+      answer:
+        type: "array"
+        items:
+          $ref: "#/definitions/AnswerDetailSaved"
     xml:
       name: "QuestionDetail"
   QuestionUpdateDetail:
@@ -512,14 +527,18 @@ definitions:
   AnswerDetail:
     type: "object"
     required:
+      - "answerId"
       - "answerTitle"
-      - "createDate"
+      - "answerTimestamp"
       - "answerText"
     properties:
+      answerId:
+        type: "string"
+        example: "AXSC10321SXAScma"
       answerTitle:
         type: "string"
         example: "React answer"
-      createDate:
+      answerTimestamp:
         type: "string"
         format: "date-time"
       answerText:

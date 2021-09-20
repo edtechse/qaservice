@@ -29,9 +29,14 @@ public class AnswerController {
 
     }
 
+    @GetMapping("questionid/{questionId}")
+    public List<AnswerItem> getAnswerByQuestionId(@PathVariable(value = "questionId") String questionId) {
+        return qaService.getAnswerByQuestionId(questionId);
+    }
+
     @GetMapping("questionid/{questionId}/answerid/{answerId}")
-    public AnswerItem getAnswerById(@PathVariable(value = "questionId") String questionId, @PathVariable(value = "answerId") String answerId) {
-        return qaService.getAnswerById(questionId, answerId);
+    public AnswerItem getAnswerByAnswerId(@PathVariable(value = "questionId") String questionId, @PathVariable(value = "answerId") String answerId) {
+        return qaService.getAnswerByAnswerId(questionId, answerId);
     }
 
     @DeleteMapping("questionid/{questionId}/answerid/{answerId}")
@@ -47,5 +52,15 @@ public class AnswerController {
     @GetMapping("author/{author}")
     public List<AnswerItem> getAnswerByAuthor(@PathVariable(value = "author") String author) {
         return qaService.getAnswerByAuthor(author);
+    }
+
+    @DeleteMapping("author/{author}")
+    public String deleteAnswerByAuthor(@PathVariable(value = "author") String author) {
+        try {
+            qaService.deleteAnswerByAuthor(author);
+            return "Successfully delete all answers related to the author in QAService table";
+        } catch (Exception e) {
+            return "Failed to delete all answers related to the author in QAService table due to " + e.getMessage();
+        }
     }
 }

@@ -64,7 +64,21 @@ public class QAService {
     }
 
     // CRUD operation for answer
-    public AnswerItem getAnswerById(String questionId, String answerId) {
+    public List<AnswerItem> getAnswerByQuestionId(String questionId) {
+        QuestionItem questionItem = qaRepository.findQuestionById(questionId);
+        List<AnswerItem> answerList = questionItem.getAnswers();
+        List<AnswerItem> convertAnswerList = new ArrayList<>();
+
+        AnswerItem answerItem = new AnswerItem();
+        ObjectMapper mapper = new ObjectMapper();
+        for (Object answerBeforeConvert: answerList) {
+            AnswerItem answer = mapper.convertValue(answerBeforeConvert, AnswerItem.class);
+            convertAnswerList.add(answer);
+        }
+        return convertAnswerList;
+    }
+
+    public AnswerItem getAnswerByAnswerId(String questionId, String answerId) {
         QuestionItem questionItem = qaRepository.findQuestionById(questionId);
         List<AnswerItem> answerList = questionItem.getAnswers();
 
@@ -119,5 +133,24 @@ public class QAService {
             }
         }
         return authorAnswerList;
+    }
+
+    public void deleteAnswerByAuthor(String author) {
+        List<QuestionItem> questionList = qaRepository.findAllQuestion();
+
+        for(QuestionItem questionItem: questionList) {
+            List<AnswerItem> answerList = questionItem.getAnswers();
+            List<AnswerItem> newAnswerList = new ArrayList<>();
+
+            ObjectMapper mapper = new ObjectMapper();
+            for(Object answerBeforeConvert: answerList) {
+                AnswerItem answer = mapper.convertValue(answerBeforeConvert, AnswerItem.class);
+                if(!answer.getAuthor().equals(author)) {
+                    newAnswerList.add(answer);
+                }
+            }
+            questionItem.setAnswers(newAnswerList);
+            qaRepository.saveQuestionByQuestionItem(questionItem);
+        }
     }
 }
