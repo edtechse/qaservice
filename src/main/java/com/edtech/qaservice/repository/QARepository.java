@@ -18,14 +18,17 @@ public class QARepository {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    @Autowired
+    private DynamoDBMapper daxMapper;
+
     public QuestionItem findQuestionById(String id) {
-        return dynamoDBMapper.load(QuestionItem.class, id);
+        return daxMapper.load(QuestionItem.class, id);
     }
 
     public List<QuestionItem> findAllQuestion() {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
 
-        List<QuestionItem> scanResult = dynamoDBMapper.scan(QuestionItem.class, scanExpression);
+        List<QuestionItem> scanResult = daxMapper.scan(QuestionItem.class, scanExpression);
 
         return scanResult;
     }
@@ -45,7 +48,7 @@ public class QARepository {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression("author = :val").withExpressionAttributeValues(eav);
 
-        List<QuestionItem> scanResult = dynamoDBMapper.scan(QuestionItem.class, scanExpression);
+        List<QuestionItem> scanResult = daxMapper.scan(QuestionItem.class, scanExpression);
 
         return scanResult;
     }
