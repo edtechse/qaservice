@@ -48,7 +48,7 @@ public class AWSConfig {
     @Bean
     public AmazonDynamoDB amazonDAX() {
         AmazonDaxClientBuilder daxClientBuilder = AmazonDaxClientBuilder.standard();
-        daxClientBuilder.withRegion(awsRegion).withEndpointConfiguration("mydaxcluster.ueamhv.dax-clusters.ap-southeast-1.amazonaws.com:8111");
+        daxClientBuilder.withRegion(awsRegion).withEndpointConfiguration("mydaxcluster.mxyuv9.dax-clusters.ap-southeast-1.amazonaws.com:8111");
 
         return daxClientBuilder.build();
     }
