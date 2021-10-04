@@ -12,6 +12,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <spring-cloud.version>Finchley.SR1</spring-cloud.version>
+    <sonar.organization>edtechproject</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
   <groupId>com.edtech.qaservice</groupId>
   <artifactId>qaservice</artifactId>
