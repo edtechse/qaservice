@@ -25,7 +25,7 @@ pipeline {
         
        stage('SAST scan') {
             steps {
-                mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=qna-api -Dsonar.login=e15f79043485111edbdff3e1df560c0f67088a9b
+               sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=qna-api -Dsonar.login=e15f79043485111edbdff3e1df560c0f67088a9b'
             }
         }
  
