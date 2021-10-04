@@ -22,6 +22,12 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/edtechse/qaservice.git']]])
             }
         }
+        
+       stage('SAST scan') {
+            steps {
+                mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=qna-api -Dsonar.login=e15f79043485111edbdff3e1df560c0f67088a9b
+            }
+        }
  
     // Building Docker images
     stage('Building image') {
