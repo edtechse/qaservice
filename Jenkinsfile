@@ -31,7 +31,11 @@ pipeline {
         }
       }
     }
-  
+   stage('Test') {
+                steps {
+                    sh "mvn clean test"
+                }
+       }
     // Uploading Docker images into AWS ECR
     stage('Pushing to ECR') {
      steps{
