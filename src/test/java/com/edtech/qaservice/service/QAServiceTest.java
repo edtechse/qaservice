@@ -1,6 +1,8 @@
-package com.edtech.qaservice.controller;
+package com.edtech.qaservice.service;
 
+import com.edtech.qaservice.controller.QuestionController;
 import com.edtech.qaservice.model.QuestionItem;
+import com.edtech.qaservice.repository.QARepository;
 import com.edtech.qaservice.service.QAService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,13 +21,13 @@ import java.util.List;
 import java.util.Set;
 
 @RunWith(MockitoJUnitRunner.class)
-public class QuestionControllerTest {
+public class QAServiceTest {
 
     @Mock
-    private QAService qaService;
+    private QARepository qaRepository;
 
     @InjectMocks
-    private QuestionController questionController;
+    private QAService qaService;
 
     private QuestionItem questionItem;
 
@@ -54,8 +56,8 @@ public class QuestionControllerTest {
 
     @Test
     public void getAllQuestion_isSuccess(){
-        Mockito.when(qaService.getAllQuestion()).thenReturn(questionItemListMock);
-        List<QuestionItem> questionItemsActual = questionController.getAllQuestion();
+        Mockito.when(qaRepository.findAllQuestion()).thenReturn(questionItemListMock);
+        List<QuestionItem> questionItemsActual = qaService.getAllQuestion();
 
         Assert.assertEquals(questionItemListMock.size(),questionItemsActual.size());
         Assert.assertEquals(questionItemListMock.get(0).getQuestionId(),questionItemsActual.get(0).getQuestionId());
@@ -69,8 +71,8 @@ public class QuestionControllerTest {
     @Test
     public void getAllQuestion_isEmpty() {
         List<QuestionItem> emptyQuestionItemList = new ArrayList<QuestionItem>();
-        Mockito.when(qaService.getAllQuestion()).thenReturn(emptyQuestionItemList);
-        List<QuestionItem> questionItemsActual = questionController.getAllQuestion();
+        Mockito.when(qaRepository.findAllQuestion()).thenReturn(emptyQuestionItemList);
+        List<QuestionItem> questionItemsActual = qaService.getAllQuestion();
         Assert.assertEquals(new ArrayList() {}, questionItemsActual);
         Assert.assertEquals(0,questionItemsActual.size());
     }
@@ -78,22 +80,21 @@ public class QuestionControllerTest {
     @Test
     public void getQuestionIdByAuthor_isSuccess(){
 
-        Mockito.when(qaService.getQuestionIdByAuthor("u1")).thenReturn(questionIds);
-        List<String> questionIdsActual = questionController.getQuestionIdByAuthor("u1");
+        Mockito.when(qaRepository.findQuestionByAuthor("u1")).thenReturn(questionItemListMock);
+        List<String> questionItemsActual = qaService.getQuestionIdByAuthor("u1");
 
-        Assert.assertEquals(questionIds.size(),questionIdsActual.size());
-        Assert.assertEquals(questionIds.get(0),questionIds.get(0));
+        Assert.assertEquals(questionItemListMock.size(),questionItemsActual.size());
+        Assert.assertEquals(questionItemListMock.get(0).getQuestionId(),questionItemsActual.get(0));
     }
 
     @Test
     public void getQuestionIdByAuthor_isEmpty(){
 
-        List<String> emptyList = new ArrayList<String>();
-        Mockito.when(qaService.getQuestionIdByAuthor("u1_nonexist")).thenReturn(emptyList);
-        List<String> questionIdsActual = questionController.getQuestionIdByAuthor("u1_nonexist");
+        List<QuestionItem> emptyQuestionItemList = new ArrayList<QuestionItem>();
+        Mockito.when(qaRepository.findQuestionByAuthor("u1_nonexist")).thenReturn(emptyQuestionItemList);
+        List<String> questionIdsActual = qaService.getQuestionIdByAuthor("u1_nonexist");
 
         Assert.assertEquals(new ArrayList(){},questionIdsActual);
         Assert.assertEquals(0,questionIdsActual.size());
     }
-
 }
