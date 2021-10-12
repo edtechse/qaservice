@@ -5,12 +5,10 @@ import com.edtech.qaservice.service.QAService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -49,7 +47,7 @@ public class QuestionControllerTest {
         questionItem.setQuestionTag(tags);
         questionItem.setQuestionTimestamp("11-11-2021");
         questionItemListMock.add(questionItem);
-        questionIds.add("u1");
+        questionIds.add("1234");
     }
 
     @Test
@@ -82,7 +80,7 @@ public class QuestionControllerTest {
         List<String> questionIdsActual = questionController.getQuestionIdByAuthor("u1");
 
         Assert.assertEquals(questionIds.size(),questionIdsActual.size());
-        Assert.assertEquals(questionIds.get(0),questionIds.get(0));
+        Assert.assertEquals(questionIds.get(0),questionIdsActual.get(0));
     }
 
     @Test
@@ -95,5 +93,4 @@ public class QuestionControllerTest {
         Assert.assertEquals(new ArrayList(){},questionIdsActual);
         Assert.assertEquals(0,questionIdsActual.size());
     }
-
 }
