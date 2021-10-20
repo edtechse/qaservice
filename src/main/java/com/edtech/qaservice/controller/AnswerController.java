@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/edtech/answer")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AnswerController {
 
     @Autowired
